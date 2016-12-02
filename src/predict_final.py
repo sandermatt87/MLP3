@@ -49,9 +49,11 @@ def main():
 	final_prediction=np.copy(models[0].predictions)
 	#write the final predictions to the csv file
 	fpredictions = open("../predictions.csv", 'w')
-	fpredictions.write("ID,Prediction\n")
+	fpredictions.write("ID,Sample,Label,Predicted\n")
 	for i in range(0,ntest):
-		fpredictions.write(str(i+1)+","+str(final_prediction[i])+"\n")
+		fpredictions.write(str(i*3)+","+str(i)+",gender,"+str(bool(final_prediction[i,0]))+"\n")
+		fpredictions.write(str(i*3+1)+","+str(i)+",age,"+str(bool(final_prediction[i,1]))+"\n")
+		fpredictions.write(str(i*3+2)+","+str(i)+",health,"+str(bool(final_prediction[i,2]))+"\n")
 	fpredictions.close()
 	
 if __name__ == "__main__":

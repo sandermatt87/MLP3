@@ -49,7 +49,7 @@ class model:
 			print "cv_hamming_loss: "+str(self.cv_score)
 		else:
 			for i in range(0,nclasses):
-				self.predictor.append(SVC(gamma=0.001/self.train_features.shape[1]))
+				self.predictor.append(SVC(gamma=50.0/self.train_features.shape[1]))
 			np.random.seed(1231)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0
