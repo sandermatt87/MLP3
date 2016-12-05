@@ -18,13 +18,15 @@ ncubes=1
 targets=parse.read_targets(ntrain,nclasses)
 
 def loss(x):
-	print x
 	method=voxel_model.voxel_model(ntrain,ntest,seg,[x[0],x[1],x[2]],[x[3],x[4],x[5]],ncubes,x[6],"seg"+str(seg)+"c"+str(ncubes)+"voxels")
+	print "gamma scale: ",method.gamma_scale
+	print "slack: ", method.slack
+	print "smoothening: ", method.smoothening
 	method.clear_cache_features()
 	method.get_features(path)
 	method.clear_cache_predictions()
 	method.train(targets,kfold_splits,nclasses)
 	return method.cv_score
 	
-scipy.optimize.minimize(loss,x0)
+scipy.optimize.minimize(loss,x0,method="CG",bounds=(0,None))
 
