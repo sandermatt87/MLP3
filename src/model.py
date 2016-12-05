@@ -25,9 +25,10 @@ class model:
 	fname_cache_cv_pred=None
 	feature_cache_exists=False
 	prediction_cache_exists=False
+	gamma_scale=-1
 	seg=-1
 	
-	def __init__(self,ntrain,ntest,seg,cname):
+	def __init__(self,ntrain,ntest,seg,gamma_scale,cname):
 		self.ntrain=ntrain
 		self.ntest=ntest
 		self.fname_cache_train="./cache/features/"+cname+"train.npy"
@@ -37,6 +38,7 @@ class model:
 		self.seg=seg
 		self.check_feature_cache()
 		self.check_prediction_cache()
+		self.gamma_scale=gamma_scale
 	
 	def train(self,targets,nsplits,nclasses):
 		#new_targets=utils.to_single_class(targets)
@@ -49,7 +51,7 @@ class model:
 			print "cv_hamming_loss: "+str(self.cv_score)
 		else:
 			for i in range(0,nclasses):
-				self.predictor.append(SVC(gamma=50.0/self.train_features.shape[1]))
+				self.predictor.append(SVC(gamma=self.gamma_scale/self.train_features.shape[1]))
 			np.random.seed(1231)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0

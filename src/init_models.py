@@ -7,6 +7,9 @@ def init(ntrain,ntest,max_cubes,nseg):
 	
 	ncubes=1
 	seg=1
-	models.append(voxel_model.voxel_model(ntrain,ntest,1,1,"seg"+str(seg)+"c"+str(ncubes)+"voxels"))
-
+	for seg in range(0,1):
+		for ncubes in range(0,1):
+			models.append(distance_segmentation.distance_segmentation(ntrain,ntest,seg,0.1,ncubes,"seg"+str(seg)+"c"+str(ncubes)+"distance"))
+			models.append(voxel_model.voxel_model(ntrain,ntest,seg,50.0,ncubes,"seg"+str(seg)+"c"+str(ncubes)+"voxels"))
+	
 	return models

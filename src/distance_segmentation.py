@@ -10,11 +10,14 @@ import preprocess
 #this model calculates the closest distance of each voxel to a voxel that is not part of the segment
 class distance_segmentation(model.model):
 
-	invert = False	
+	invert = False
+	ncubes=1
+
 	
-	def __init__(self,ntrain,ntest,seg,ncubes,pos,cname,weight,invert=False):
-		model.model.__init__(self,ntrain,ntest,seg,ncubes,pos,cname, weight)
+	def __init__(self,ntrain,ntest,seg,gamma_scale,ncubes,cname,invert=False):
+		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,cname)
 		self.invert=invert
+		self.ncubes=ncubes
 		
 	def read_features(self,path):
 		tmp=[]
@@ -22,7 +25,7 @@ class distance_segmentation(model.model):
 		for i in range(0,self.ntrain):
 			print "reading train image "+str(i)
 			filename=train_path+str(i+1)+".nii"
-			array=parse.voxels_from_image(filename,self.ncubes,self.pos,smoothening=False)
+			array=parse.voxels_from_image(filename,self.ncubes,smoothening=False)
 			if(self.invert):
 				array[array==0]=-1
 				array[array>0]=0
@@ -39,7 +42,7 @@ class distance_segmentation(model.model):
 		for i in range(0,self.ntest):
 			print "reading test image "+str(i)
 			filename=test_path+str(i+1)+".nii"
-			array=parse.voxels_from_image(filename,self.ncubes,self.pos,smoothening=False)
+			array=parse.voxels_from_image(filename,self.ncubes,smoothening=False)
 			if(self.invert):
 				array[array==0]=-1
 				array[array>0]=0

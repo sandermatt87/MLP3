@@ -12,8 +12,8 @@ class voxel_model(model.model):
 
 	ncubes=1
 
-	def __init__(self,ntrain,ntest,seg,ncubes,cname):
-		model.model.__init__(self,ntrain,ntest,seg,cname)
+	def __init__(self,ntrain,ntest,seg,gamma_scale,ncubes,cname):
+		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,cname)
 		self.ncubes=ncubes
 		
 	def read_features(self,path):
