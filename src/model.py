@@ -45,6 +45,7 @@ class model:
 		#new_targets=utils.to_single_class(targets)
 		
 		print "training model with: ",self.fname_cache_train
+		self.check_prediction_cache()
 		if(self.prediction_cache_exists):
 			self.read_cache_predictions()
 			print targets,self.cv_predictions
@@ -83,7 +84,6 @@ class model:
 			self.cache_features()
 		
 	def predict(self,nclasses):
-		self.check_prediction_cache()
 		if(self.prediction_cache_exists):
 			self.read_cache_predictions()
 		else:

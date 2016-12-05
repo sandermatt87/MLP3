@@ -21,7 +21,7 @@ class voxel_model(model.model):
 	def read_features(self,path):
 		tmp=[]
 		train_path=path+"set_train/c"+str(self.seg)+"train_"
-		print "reading train imagea"
+		print "reading train images"
 		for i in range(0,self.ntrain):
 			filename=train_path+str(i+1)+".nii"
 			array=parse.voxels_from_image(filename,self.ncubes,smoothening_width=self.smootening)
