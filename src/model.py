@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.model_selection import KFold
 import os.path
+import os
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.metrics import hamming_loss
@@ -27,8 +28,9 @@ class model:
 	prediction_cache_exists=False
 	gamma_scale=-1
 	seg=-1
+	slack=-1
 	
-	def __init__(self,ntrain,ntest,seg,gamma_scale,cname):
+	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,cname):
 		self.ntrain=ntrain
 		self.ntest=ntest
 		self.fname_cache_train="./cache/features/"+cname+"train.npy"
@@ -36,9 +38,8 @@ class model:
 		self.fname_cache_pred="./cache/predictions/"+cname+"pred.npy"
 		self.fname_cache_cv_pred="./cache/predictions/"+cname+"cv_pred.npy"
 		self.seg=seg
-		self.check_feature_cache()
-		self.check_prediction_cache()
 		self.gamma_scale=gamma_scale
+		self.slack=slack
 	
 	def train(self,targets,nsplits,nclasses):
 		#new_targets=utils.to_single_class(targets)
@@ -51,7 +52,7 @@ class model:
 			print "cv_hamming_loss: "+str(self.cv_score)
 		else:
 			for i in range(0,nclasses):
-				self.predictor.append(SVC(gamma=self.gamma_scale/self.train_features.shape[1]))
+				self.predictor.append(SVC(C=self.slack[i],gamma=self.gamma_scale[i]/self.train_features.shape[1]))
 			np.random.seed(1231)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0
@@ -69,6 +70,7 @@ class model:
 		self.predict(nclasses)
 		
 	def get_features(self,path):
+		self.check_feature_cache()
 		if(self.feature_cache_exists):
 			if(not self.prediction_cache_exists): # if we have the predictions we do not need the features
 				self.read_cache_features()
@@ -108,7 +110,19 @@ class model:
 		self.train_features=np.load(self.fname_cache_train)
 		self.test_features=np.load(self.fname_cache_test)
 		
+	def clear_cache_features(self):
+		if(os.path.isfile(self.fname_cache_train)):
+			os.remove(self.fname_cache_train)
+		if(os.path.isfile(self.fname_cache_test)):
+			os.remove(self.fname_cache_test)
+		
 	def read_cache_predictions(self):
 		self.cv_predictions=np.load(self.fname_cache_cv_pred)
 		self.predictions=np.load(self.fname_cache_pred)
+		
+	def clear_cache_predictions(self):
+		if(os.path.isfile(self.fname_cache_cv_pred)):
+			os.remove(self.fname_cache_cv_pred)
+		if(os.path.isfile(self.fname_cache_pred)):
+			os.remove(self.fname_cache_pred)
 

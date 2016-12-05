@@ -37,8 +37,8 @@ def main():
 	models=init_models.init(ntrain,ntest,max_cubes,nseg)
 
 	#loop over all models, and calculate the features
-	for imodel in range(0,nmodel): 
-		path = "../data/"
+	path = "../data/"
+	for imodel in range(0,nmodel):
 		models[imodel].get_features(path)
 	
 	#train the models
