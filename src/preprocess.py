@@ -46,8 +46,8 @@ def remove_zero_variance_vector(vector,nonzeros):
 	return new_vector
 	
 def get_cube(array,ncubes,pos):
-	low_bound=[pos[i]*array.shape[i]/ncubes for i in range(0,3)]
-	high_bound=[(pos[i]+1)*array.shape[i]/ncubes for i in range(0,3)]
+	low_bound=[pos[i]*(array.shape[i]/ncubes) for i in range(0,3)]
+	high_bound=[(pos[i]+1)*(array.shape[i]/ncubes) for i in range(0,3)]
 	new_array=array[low_bound[0]:high_bound[0],low_bound[1]:high_bound[1],low_bound[2]:high_bound[2]]
 	return new_array
 	
