@@ -34,7 +34,7 @@ def main():
 	print "number of models: ", nmodel
 	
 	#initialize all models
-	models=init_models.init(ntrain,ntest,max_cubes,nseg)
+	models=init_models.init(ntrain,ntest,max_cubes,nseg,nclasses)
 
 	#loop over all models, and calculate the features
 	path = "../data/"
@@ -44,7 +44,7 @@ def main():
 	#train the models
 	targets=parse.read_targets(ntrain,nclasses)
 	for imodel in range(0,nmodel): 
-		models[imodel].train(targets,kfold_splits,nclasses)
+		models[imodel].train(targets,kfold_splits)
 			
 	final_prediction=np.copy(models[0].predictions)
 	#write the final predictions to the csv file

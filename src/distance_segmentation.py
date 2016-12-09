@@ -14,8 +14,8 @@ class distance_segmentation(model.model):
 	ncubes=1
 
 	
-	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,ncubes,cname,invert=False):
-		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,slack,cname)
+	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,ncubes,cname,nclasses,invert=False):
+		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,slack,cname,nclasses)
 		self.invert=invert
 		self.ncubes=ncubes
 		

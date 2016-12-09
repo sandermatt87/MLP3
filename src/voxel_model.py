@@ -13,8 +13,8 @@ class voxel_model(model.model):
 	ncubes=1
 	smootening=-1
 
-	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,ncubes,smoothening,cname):
-		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,slack,cname)
+	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,ncubes,smoothening,cname,nclasses):
+		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,slack,cname,nclasses)
 		self.ncubes=ncubes
 		self.smoothening=smoothening
 		
