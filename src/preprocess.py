@@ -23,7 +23,7 @@ def crop(img,box_boundary=[20,153,20,187,14,149]):
 	return new_array
 	
 def get_nonzero_variance(array):
-	#removes all zero variance elements
+	#returns all zero variance elements
 	diff=np.zeros(array.shape)
 	for i in range(0,array.shape[0]):
 		diff[i,:]=array[i,:]-array[0,:]
@@ -44,3 +44,22 @@ def remove_zero_variance_vector(vector,nonzeros):
 	for i in range(0,nonzeros.shape[0]):
 		new_vector[i]=vector[nonzeros[i]]
 	return new_vector
+	
+def get_cube(array,ncubes,pos):
+	low_bound=[pos[i]*array.shape[i]/ncubes for i in range(0,3)]
+	high_bound=[(pos[i]+1)*array.shape[i]/ncubes for i in range(0,3)]
+	new_array=array[low_bound[0]:high_bound[0],low_bound[1]:high_bound[1],low_bound[2]:high_bound[2]]
+	return new_array
+	
+def features1D(array,ncubes):
+	#creates a 1d array of the features, with the cubes listed consecutively on the array
+	cubes=[]
+	for x in range(0,ncubes):
+		for y in range(0,ncubes):
+			for z in range(0,ncubes):
+				cubes.append(get_cube(array,ncubes,[x,y,z]))
+	result=np.zeros(cubes[0].size*ncubes**3)
+	for i in range(0,len(cubes)):
+		result[i*cubes[0].size:(i+1)*cubes[0].size]=np.reshape(cubes[i],cubes[i].size)
+	return result
+				

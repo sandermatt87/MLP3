@@ -82,9 +82,6 @@ class model:
 		else:
 			self.check_prediction_cache()
 			self.read_features(path)
-			nonzeros=preprocess.get_nonzero_variance(self.train_features)
-			self.train_features=preprocess.remove_zero_variance(self.train_features,nonzeros)
-			self.test_features=preprocess.remove_zero_variance(self.test_features,nonzeros)
 			self.cache_features()
 		
 	def predict(self):
