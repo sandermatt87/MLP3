@@ -36,7 +36,7 @@ class cube_predictor():
 					self.predictors[cube].fit(cube_features[train],targets[train])
 					self.cv_predictions[test,cube]=self.predictors[cube].predict_proba(cube_features[test])[:,1]
 			self.weights=mixing.cv_optimization(self.cv_predictions,targets,self.ncubes)
-			print self.weights
+			#print self.weights
 		for i in range(0,self.ncubes):
 			self.predictors[i].fit(features[:,i*cube_size:(i+1)*cube_size],targets)
 	def predict(self,features):
