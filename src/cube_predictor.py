@@ -26,7 +26,7 @@ class cube_predictor():
 		for i in range(0,self.ncubes):
 			self.predictors.append(SVC(C=self.slack,gamma=self.gamma_scale/features.shape[1],probability=True))
 		if(not self.cv_opt):
-			self.weights=np.zeros(ncubes)+1.0/ncubes
+			self.weights=np.zeros(self.ncubes)+1.0/self.ncubes
 		else:
 			self.cv_predictions=np.zeros((targets.shape[0],self.ncubes))
 			kf = KFold(n_splits=self.nsplits)
