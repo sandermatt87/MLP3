@@ -19,7 +19,7 @@ class voxel_model(model.model):
 		self.smoothening=smoothening
 		if(ncubes>1):
 			for i in range(0,nclasses):
-				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma_scale[i],slack[i])
+				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma_scale[i],slack[i],cv_opt=True)
 		
 	def read_features(self,path):
 		tmp=[]
