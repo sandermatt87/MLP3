@@ -1,0 +1,10 @@
+merging src2 src
+basin hopping with multiple initial guesses
+model mixing
+multilabel classification
+man vs women model
+
+models:
+voxel model: autotune, pca
+distance model: make cubes, autotone, pca
+histogram model: make cubes, autotune
