@@ -1,5 +1,4 @@
 merging src2 src
-basin hopping with multiple initial guesses
 model mixing
 multilabel classification
 man vs women model
