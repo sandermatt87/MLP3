@@ -3,6 +3,7 @@ basin hopping with multiple initial guesses
 model mixing
 multilabel classification
 man vs women model
+freesurfer
 
 models:
 voxel model: autotune, pca
