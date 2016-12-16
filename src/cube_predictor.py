@@ -16,7 +16,7 @@ class cube_predictor():
     predictors=[] # a list of the predictors for each subset, currently we use svm's
     cube_size=-1 # length of the feature vector for a subset/cube
     cv_opt=False #If true the models are mixed using cross validation optimization, of False they are mixed evenly
-    cv_predictions=None #the prediction each submodel makes under crossvalidation
+    cv_predictions=None #the predictions under crossvalidation
     nsplits=3 #splits in the kfold cross validation optimization
     weights=[]
 
