@@ -4,14 +4,19 @@ from sklearn.model_selection import KFold
 
 import mixing
 
+#the cube predictor allows for a model to make predictions fur subsets of its features. For the cube predictor to work the subsets need to be ordered sequentially in the feature vector. Each subset can be viewd at as a separate model. The cube predictor will internally mix the models ans expose one meta-model to the outside. The model tries to emulate the interface for a sklearn method such as svm.
 class cube_predictor():
-    ncubes=-1
+    ncubes=-1  # the number of subsets of the features
+    
+    #svm parameters
     gamma_scale=-1
     slack=-1
-    predictors=[]
-    cube_size=-1
+    
+    
+    predictors=[] # a list of the predictors for each subset, currently we use svm's
+    cube_size=-1 # length of the feature vector for a subset/cube
     cv_opt=False #If true the models are mixed using cross validation optimization, of False they are mixed evenly
-    cv_predictions=None
+    cv_predictions=None #the prediction each submodel makes under crossvalidation
     nsplits=3 #splits in the kfold cross validation optimization
     weights=[]
 
