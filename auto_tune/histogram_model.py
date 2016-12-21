@@ -3,7 +3,7 @@ import parse
 import preprocess
 import nibabel as nib
 import numpy as np
-from sklearn.model_selection import KFold
+from sklearn.model_selection  import KFold
 from scipy.ndimage.filters import gaussian_filter
 from sklearn.svm import SVC
 
@@ -17,12 +17,12 @@ class histogram_model(model.model):
 		self.custom_svm=True
 		
 	def read_features(self,path):
-		print "parsing features at ",str(self.seg),self.ncubes,self.pos
+		print("parsing features at ",str(self.seg),self.ncubes,self.pos)
 		tmp=[]
 		train_path=path+"set_train/c"+str(self.seg)+"train_"
 		ref_path=path+"set_train/"+"train_"
 		for i in range(0,self.ntrain):
-			print "reading train image "+str(i)
+			print("reading train image "+str(i))
 			filename=train_path+str(i+1)+".nii"
 			ref_name=ref_path+str(i+1)+".nii"
 			hist=get_unmasked_values(filename,ref_name,self.ncubes,self.pos)
@@ -34,7 +34,7 @@ class histogram_model(model.model):
 		test_path=path+"set_test/c"+str(self.seg)+"test_"
 		ref_path=path+"set_test/"+"test_"
 		for i in range(0,self.ntest):
-			print "reading test image "+str(i)
+			print("reading test image "+str(i))
 			filename=test_path+str(i+1)+".nii"
 			ref_name=ref_path+str(i+1)+".nii"
 			hist=get_unmasked_values(filename,ref_name,self.ncubes,self.pos)

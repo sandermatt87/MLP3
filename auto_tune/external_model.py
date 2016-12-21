@@ -4,7 +4,7 @@ import preprocess
 import nibabel as nib
 import numpy as np
 import sklearn
-from sklearn.model_selection import KFold
+from sklearn.model_selection  import KFold
 from sklearn.svm import SVC
 
 import preprocess
@@ -17,7 +17,7 @@ class canny(model.model):
 		self.custom_svm=True
 		
 	def read_features(self,path):
-		print "external model, please write te features directly to the cache"
+		print("external model, please write te features directly to the cache")
 		
 class hog(model.model):
 	def __init__(self,ntrain,ntest,seg,ncubes,pos,cname, weight):
@@ -25,4 +25,4 @@ class hog(model.model):
 		self.predictor = SVC(probability=True,C=1)
 		
 	def read_features(self,path):
-		print "external model, please write te features directly to the cache"
+		print("external model, please write te features directly to the cache")
