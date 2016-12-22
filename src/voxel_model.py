@@ -43,10 +43,10 @@ class voxel_model(model.model):
 		for i in range (0,self.ntest):
 			self.test_features[i,:]=tmp[i]
 		if(self.ncubes==1):
-			#Compress the data. This can only be done without cubes, since otherwise the format gets messed up
+			#Remove zero vaiance elements, to make the pca cheaper. This can only be done without cubes, since otherwise the format gets messed up
 			nonzeros=preprocess.get_nonzero_variance(self.train_features)
 			self.train_features=preprocess.remove_zero_variance(self.train_features,nonzeros)
 			self.test_features=preprocess.remove_zero_variance(self.test_features,nonzeros)
-			
+		self.train_features,self.test_features=preprocess.segwise_pca(self.train_features,self.test_features,self.ncubes,self.ntrain,self.ntest)
 
 				

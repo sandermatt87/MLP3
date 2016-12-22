@@ -1,6 +1,7 @@
 import numpy as np
 import nibabel as nib
 import math
+from sklearn.decomposition import PCA
 from scipy.ndimage.filters import gaussian_filter
 
 #functions regarding the preprocessing of the features
@@ -62,4 +63,20 @@ def features1D(array,ncubes):
 	for i in range(0,len(cubes)):
 		result[i*cubes[0].size:(i+1)*cubes[0].size]=np.reshape(cubes[i],cubes[i].size)
 	return result
+	
+def segwise_pca(train_features,test_features,ncubes,ntrain,ntest):
+	#pca transforms the features cube by cube
+	nfeatures=train_features.shape[1]
+	features_per_cube=nfeatures/(ncubes**3)
+	out_train=np.zeros((ntrain,ntrain*(ncubes**3)))
+	out_test=np.zeros((ntest,ntrain*(ncubes**3)))
+	for i in range(0,ncubes**3):
+		pca = PCA(n_components=ntrain, svd_solver='full')
+		out_train[:,i*ntrain:(i+1)*ntrain]=pca.fit_transform(train_features[:,i*features_per_cube:(i+1)*features_per_cube])
+		out_test[:,i*ntrain:(i+1)*ntrain]=pca.transform(test_features[:,i*features_per_cube:(i+1)*features_per_cube])
+	print train_features.shape,test_features.shape
+	print out_train.shape,out_test.shape
+	return out_train,out_test
+
+		
 				
