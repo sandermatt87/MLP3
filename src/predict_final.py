@@ -16,6 +16,7 @@ from sklearn.svm import SVC
 import parse
 import model
 import init_models
+import mixing
 
 import matplotlib.pyplot as plt
 
@@ -45,8 +46,18 @@ def main():
 	targets=parse.read_targets(ntrain,nclasses)
 	for imodel in range(0,nmodel): 
 		models[imodel].train(targets,kfold_splits)
-			
-	final_prediction=np.copy(models[0].predictions)
+		
+	#mix the models
+	if(nmodel>1):
+		final_prediction=np.zeros((ntest,nclasses))
+		for iclass in range(0,nclasses):
+			cv_predictions=np.zeros((ntrain,nmodel))
+			for imodel in range(0,nmodel):
+				cv_predictions[:,imodel]=models[imodel].cv_predictions[:,iclass]
+			print cv_predictions.shape
+			weights=mixing.cv_optimization(cv_predictions,targets[:,iclass],nmodel)
+	else:
+		final_prediction=np.copy(models[0].predictions)
 	#write the final predictions to the csv file
 	fpredictions = open("../predictions.csv", 'w')
 	fpredictions.write("ID,Sample,Label,Predicted\n")
