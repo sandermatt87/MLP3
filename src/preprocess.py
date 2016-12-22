@@ -74,8 +74,6 @@ def segwise_pca(train_features,test_features,ncubes,ntrain,ntest):
 		pca = PCA(n_components=ntrain, svd_solver='full')
 		out_train[:,i*ntrain:(i+1)*ntrain]=pca.fit_transform(train_features[:,i*features_per_cube:(i+1)*features_per_cube])
 		out_test[:,i*ntrain:(i+1)*ntrain]=pca.transform(test_features[:,i*features_per_cube:(i+1)*features_per_cube])
-	print train_features.shape,test_features.shape
-	print out_train.shape,out_test.shape
 	return out_train,out_test
 
 		
