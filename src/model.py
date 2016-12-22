@@ -17,7 +17,7 @@ class model:
 	ntest=0
 	train_features=None
 	test_features=None
-	predictor=[]
+	predictor=None
 	predictions=None
 	cv_predictions=None
 	fname_cache_train=None
@@ -41,6 +41,7 @@ class model:
 		self.gamma_scale=gamma_scale
 		self.slack=slack
 		self.nclasses=nclasses
+		self.predictor=[]
 		for i in range(0,nclasses):
 			self.predictor.append(None)
 	
@@ -51,7 +52,6 @@ class model:
 		self.check_prediction_cache()
 		if(self.prediction_cache_exists):
 			self.read_cache_predictions()
-			print targets,self.cv_predictions
 			self.cv_score+=hamming_loss(targets,self.cv_predictions)
 			print "cv_hamming_loss: "+str(self.cv_score)
 		else:
