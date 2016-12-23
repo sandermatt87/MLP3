@@ -12,7 +12,7 @@ class cube_predictor():
 	cube_size=-1
 	cv_opt=False #If true the models are mixed using cross validation optimization, of False they are mixed evenly
 	cv_predictions=None
-	nsplits=3 #splits in the kfold cross validation optimization
+	nsplits=5 #splits in the kfold cross validation optimization
 	weights=[]
 	
 	def __init__(self,ncubes,gamma_scale,slack,cv_opt=False):
