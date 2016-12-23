@@ -58,7 +58,7 @@ class model:
 			for i in range(0,self.nclasses):
 				if(self.predictor[i] is None):
 					self.predictor[i]=SVC(C=self.slack[i],gamma=self.gamma[i],probability=True)
-			np.random.seed(1231)
+			np.random.seed(1237)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0
 			kf = KFold(n_splits=nsplits)
@@ -66,7 +66,8 @@ class model:
 				for i in range(0,self.nclasses):
 					self.predictor[i].fit(self.train_features[train],targets[train,i])
 					self.cv_predictions[test,i]=self.predictor[i].predict_proba(self.train_features[test])[:,1]
-			print "cv_hamming_loss: "+str(hamming_loss(targets,np.round(self.cv_predictions).astype(int)))
+					#self.cv_predictions[test,i]=self.predictor[i].predict(self.train_features[test])
+			print "cv_hamming_loss: "+str(hamming_loss(targets[:,0],np.round(self.cv_predictions[:,0]).astype(int))),str(hamming_loss(targets[:,1],np.round(self.cv_predictions[:,1]).astype(int))),str(hamming_loss(targets[:,2],np.round(self.cv_predictions[:,2]).astype(int)))
 			for i in range(0,self.nclasses):
 				self.predictor[i].fit(self.train_features, targets[:,i])
 				
@@ -89,12 +90,14 @@ class model:
 			self.predictions=np.zeros((self.ntest,self.nclasses))
 			for i in range(0,self.nclasses):
 				self.predictions[:,i]=self.predictor[i].predict_proba(self.test_features)[:,1]
+				#self.predictions[:,i]=self.predictor[i].predict(self.test_features)
 				if(True):
 					#print self.predictor[i].predict(self.train_features)-targets[:,i]
 					#print np.sum(np.abs(self.predictor[i].predict(self.train_features)-targets[:,i]))
 					#print self.cv_predictions[:,i]-targets[:,i]
 					print np.sum(np.abs(self.cv_predictions[:,i]-targets[:,i]))
 					#print self.predictions[:,i]
+					#print self.predictions.shape
 				self.cache_predictions()
 			
 	def cache_features(self):
