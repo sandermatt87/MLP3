@@ -54,6 +54,8 @@ class distance_segmentation(model.model):
 			array=closest_distance(array)
 			tmp.append(preprocess.features1D(array,self.ncubes))
 		self.test_features=np.zeros((self.ntest,tmp[0].size))
+		for i in range (0,self.ntest):
+			self.test_features[i,:]=tmp[i]
 		if(self.ncubes==1):
 			#Remove zero vaiance elements, to make the pca cheaper. This can only be done without cubes, since otherwise the format gets messed up
 			nonzeros=preprocess.get_nonzero_variance(self.train_features)
