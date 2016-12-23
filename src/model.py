@@ -26,11 +26,11 @@ class model:
 	fname_cache_cv_pred=None
 	feature_cache_exists=False
 	prediction_cache_exists=False
-	gamma_scale=-1
+	gamma=-1
 	seg=-1
 	slack=-1
 	
-	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,cname,nclasses):
+	def __init__(self,ntrain,ntest,seg,gamma,slack,cname,nclasses):
 		self.ntrain=ntrain
 		self.ntest=ntest
 		self.fname_cache_train="./cache/features/"+cname+"train.npy"
@@ -38,7 +38,7 @@ class model:
 		self.fname_cache_pred="./cache/predictions/"+cname+"pred.npy"
 		self.fname_cache_cv_pred="./cache/predictions/"+cname+"cv_pred.npy"
 		self.seg=seg
-		self.gamma_scale=gamma_scale
+		self.gamma=gamma
 		self.slack=slack
 		self.nclasses=nclasses
 		self.predictor=[]
@@ -57,7 +57,7 @@ class model:
 		else:
 			for i in range(0,self.nclasses):
 				if(self.predictor[i] is None):
-					self.predictor[i]=SVC(C=self.slack[i],gamma=self.gamma_scale[i]/self.train_features.shape[1])
+					self.predictor[i]=SVC(C=self.slack[i],gamma=self.gamma[i])
 			np.random.seed(1231)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0

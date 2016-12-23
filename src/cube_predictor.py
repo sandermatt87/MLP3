@@ -6,7 +6,7 @@ import mixing
 
 class cube_predictor():
 	ncubes=-1
-	gamma_scale=-1
+	gamma=-1
 	slack=-1
 	predictors=[]
 	cube_size=-1
@@ -15,16 +15,16 @@ class cube_predictor():
 	nsplits=5 #splits in the kfold cross validation optimization
 	weights=[]
 	
-	def __init__(self,ncubes,gamma_scale,slack,cv_opt=False):
+	def __init__(self,ncubes,gamma,slack,cv_opt=False):
 		self.ncubes=ncubes**3
 		self.slack=slack
-		self.gamma_scale=gamma_scale
+		self.gamma=gamma
 		self.cv_opt=cv_opt
 		
 	def fit(self,features,targets):
 		cube_size=int(round(float(features.shape[1])/(self.ncubes)))
 		for i in range(0,self.ncubes):
-			self.predictors.append(SVC(C=self.slack,gamma=self.gamma_scale/features.shape[1],probability=True))
+			self.predictors.append(SVC(C=self.slack,gamma=self.gamma,probability=True))
 		if(not self.cv_opt):
 			self.weights=np.zeros(self.ncubes)+1.0/self.ncubes
 		else:

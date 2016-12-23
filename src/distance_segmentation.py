@@ -14,12 +14,12 @@ class distance_segmentation(model.model):
 	ncubes=1
 
 	
-	def __init__(self,ntrain,ntest,seg,gamma_scale,slack,ncubes,cname,nclasses,invert=False):
-		model.model.__init__(self,ntrain,ntest,seg,gamma_scale,slack,cname,nclasses)
+	def __init__(self,ntrain,ntest,seg,gamma,slack,ncubes,cname,nclasses,invert=False):
+		model.model.__init__(self,ntrain,ntest,seg,gamma,slack,cname,nclasses)
 		self.ncubes=ncubes
 		if(ncubes>1):
 			for i in range(0,nclasses):
-				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma_scale[i],slack[i],cv_opt=True)
+				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma[i],slack[i],cv_opt=True)
 		
 	def read_features(self,path):
 		tmp=[]
