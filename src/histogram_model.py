@@ -11,21 +11,28 @@ import preprocess
 
 #this model uses the voxels as input
 class histogram_model(model.model):
-	def __init__(self,ntrain,ntest,seg,ncubes,pos,cname,weight):
-		model.model.__init__(self,ntrain,ntest,seg,ncubes,pos,cname,weight)
-		self.predictor = SVC(probability=True,C=2,gamma=0.000000005)
+
+	ncubes=-1
+	smoothening=-1
+
+	def __init__(self,ntrain,ntest,seg,gamma,slack,ncubes,smoothening,cname,nclasses):
+		model.model.__init__(self,ntrain,ntest,seg,gamma,slack,cname,nclasses)
 		self.custom_svm=True
-		
+		self.ncubes=ncubes
+		self.smoothening=smoothening
+		if(ncubes>1):
+			for i in range(0,nclasses):
+				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma[i],slack[i],cv_opt=True)
+				
 	def read_features(self,path):
-		print "parsing features at ",str(self.seg),self.ncubes,self.pos
 		tmp=[]
-		train_path=path+"set_train/c"+str(self.seg)+"train_"
-		ref_path=path+"set_train/"+"train_"
+		train_path=path+"set_train/c"+str(self.seg)+"train_" #grey matter mask
+		ref_path=path+"set_train/"+"train_"  #original image
+		print "reading train images"
 		for i in range(0,self.ntrain):
-			print "reading train image "+str(i)
 			filename=train_path+str(i+1)+".nii"
 			ref_name=ref_path+str(i+1)+".nii"
-			hist=get_unmasked_values(filename,ref_name,self.ncubes,self.pos)
+			hist=get_histogram(filename,ref_name,self.ncubes,self.smoothening)
 			tmp.append(hist)
 		self.train_features=np.zeros((self.ntrain,tmp[0].size))
 		for i in range (0,self.ntrain):
@@ -33,21 +40,20 @@ class histogram_model(model.model):
 		tmp=[]
 		test_path=path+"set_test/c"+str(self.seg)+"test_"
 		ref_path=path+"set_test/"+"test_"
+		print "reading train images"
 		for i in range(0,self.ntest):
-			print "reading test image "+str(i)
 			filename=test_path+str(i+1)+".nii"
-			ref_name=ref_path+str(i+1)+".nii"
-			hist=get_unmasked_values(filename,ref_name,self.ncubes,self.pos)
+			hist=get_histogram(filename,ref_name,self.ncubes,self.smoothening)
 			tmp.append(hist)
 		self.test_features=np.zeros((self.ntest,tmp[0].size))
 		for i in range (0,self.ntest):
 			self.test_features[i,:]=tmp[i]
 			
-def get_unmasked_values(filename,ref_name,ncubes,pos):
-	array=parse.voxels_from_image(filename,ncubes,pos,smoothening=False,stride=[1,1,1])
-	ref_array=parse.voxels_from_image(ref_name,ncubes,pos,smoothening=False,stride=[1,1,1])
-	array=np.round(array)
-	true_array=np.multiply(array,ref_array[:,:,:,0])
-	#true_array=gaussian_filter(true_array,2.2)
+def get_histogram(filename,ref_name,ncubes,smoothening):
+	array=parse.voxels_from_image(filename,smoothening_width=smoothening)
+	array=preprocess.features1D(array,ncubes)
+	ref_array=parse.voxels_from_image(filename,smoothening_width=smoothening)
+	ref_array=preprocess.features1D(ref_array,ncubes)
+	true_array=np.multiply(array,ref_array)
 	hist=np.histogram(true_array,bins=100,range=(0,1000))
 	return hist[0]
