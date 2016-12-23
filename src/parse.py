@@ -5,7 +5,7 @@ import os
 import preprocess
 
 #functions related to readng from files
-def voxels_from_image(filename,smoothening=True,stride=[4,4,4],smoothening_width=2.2):
+def voxels_from_image(filename,smoothening=True,stride=[2,2,2],smoothening_width=2.2):
 	img=nib.load(filename)
 	array=preprocess.crop(img)
 	if(smoothening):
