@@ -21,11 +21,11 @@ def cv_optimization(cv_predictions,targets,nmodel):
 		#print hamming_loss(targets, predictions)
 		return hamming_loss(targets, predictions)
 	initial_weights = np.random.rand(nmodel-1)
-	print "averaging loss", loss(np.ones(nmodel-1)*0.0001)
+	#print "averaging loss", loss(np.ones(nmodel-1)*0.0001)
 	#optimal_weights = minimize(loss, initial_weights, method='L-BFGS-B', bounds=[(0, None)]*(nmodel-1)).x
 	minimizer_kwargs = {"method":"L-BFGS-B", "bounds":[(0, None)]*(nmodel-1)}
 	optimal_weights = basinhopping(loss,initial_weights, T=0.004,minimizer_kwargs=minimizer_kwargs).x
-	print "Mixed models with cv_optimization, resulting loss:", loss(optimal_weights)
+	#print "Mixed models with cv_optimization, resulting loss:", loss(optimal_weights)
 	optimal_weights = np.insert(optimal_weights, 0, 0.0001)
 	optimal_weights = optimal_weights/np.sum(optimal_weights)
 	return optimal_weights
