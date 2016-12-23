@@ -40,7 +40,7 @@ class cube_predictor():
 		for i in range(0,self.ncubes):
 			self.predictors[i].fit(features[:,i*cube_size:(i+1)*cube_size],targets)
 	def predict(self,features):
-		predictions=self.predict_proba(features)
+		predictions=self.predict_proba(features)[:,1]
 		final_result=np.round(predictions)
 		return final_result
 		
@@ -49,10 +49,10 @@ class cube_predictor():
 		results=[]
 		for i in range(0,self.ncubes):
 			results.append(self.predictors[i].predict_proba(features[:,i*cube_size:(i+1)*cube_size])[:,1])
-		final_result=np.zeros(results[0].shape)
+		final_result=np.zeros((results[0].shape[0],2))
 		for i in range(0,results[0].shape[0]):
 			for j in range(0,self.ncubes):
-				final_result[i]+=results[j][i]*self.weights[j]
-			final_result[i]=final_result[i]
+				final_result[i,1]+=results[j][i]*self.weights[j]
+			final_result[i,0]=1-final_result[i,1]
 		return final_result
 
