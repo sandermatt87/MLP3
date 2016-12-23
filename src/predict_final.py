@@ -7,7 +7,7 @@ import csv
 import timeit
 import os
 import scipy
-from sklearn.metrics import log_loss
+from sklearn.metrics import hamming_loss
 from scipy.optimize import minimize
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
@@ -27,9 +27,9 @@ def main():
 	ntrain=278 # number of training points
 	ntest=138 # number of test points
 	nclasses=3 # number of classes
-	max_cubes=2 # maximum number of cubes in each direction
+	max_cubes=3 # maximum number of cubes in each direction
 	nseg=1   #number of segments of the brain
-	nmodel=1 #number of models to fit
+	nmodel=2 #number of models to fit
 	kfold_splits=10 # number of splits in the kfold cross validation
 	
 	print "number of models: ", nmodel
@@ -50,12 +50,18 @@ def main():
 	#mix the models
 	if(nmodel>1):
 		final_prediction=np.zeros((ntest,nclasses))
+		final_cv_prediction=np.zeros((ntrain,nclasses))
 		for iclass in range(0,nclasses):
 			cv_predictions=np.zeros((ntrain,nmodel))
 			for imodel in range(0,nmodel):
 				cv_predictions[:,imodel]=models[imodel].cv_predictions[:,iclass]
-			print cv_predictions.shape
 			weights=mixing.cv_optimization(cv_predictions,targets[:,iclass],nmodel)
+			for imodel in range(0,nmodel):
+				final_prediction[:,iclass]+=weights[imodel]*models[imodel].predictions[:,iclass]
+				final_cv_prediction[:,iclass]+=weights[imodel]*models[imodel].cv_predictions[:,iclass]
+			final_prediction[:,iclass]=np.round(final_prediction[:,iclass]).astype(int)
+			final_cv_prediction[:,iclass]=np.round(final_cv_prediction[:,iclass]).astype(int)
+		print "cv hamming loss after final mixing", hamming_loss(targets,final_cv_prediction)
 	else:
 		final_prediction=np.copy(models[0].predictions)
 	#write the final predictions to the csv file
