@@ -12,11 +12,11 @@ class distance_segmentation(model.model):
 
 	invert = False
 	ncubes=1
-
 	
 	def __init__(self,ntrain,ntest,seg,gamma,slack,ncubes,cname,nclasses,invert=False):
 		model.model.__init__(self,ntrain,ntest,seg,gamma,slack,cname,nclasses)
 		self.ncubes=ncubes
+		self.invert=invert
 		if(ncubes>1):
 			for i in range(0,nclasses):
 				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma[i],slack[i],cv_opt=True)
