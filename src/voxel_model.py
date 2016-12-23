@@ -37,7 +37,7 @@ class voxel_model(model.model):
 		print "reading test images"
 		for i in range(0,self.ntest):
 			filename=test_path+str(i+1)+".nii"
-			array=parse.voxels_from_image(filename,self.ncubes,smoothening_width=self.smoothening)
+			array=parse.voxels_from_image(filename,smoothening_width=self.smoothening)
 			tmp.append(preprocess.features1D(array,self.ncubes))
 		self.test_features=np.zeros((self.ntest,tmp[0].size))
 		for i in range (0,self.ntest):
