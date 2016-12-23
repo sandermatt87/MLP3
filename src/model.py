@@ -52,12 +52,12 @@ class model:
 		self.check_prediction_cache()
 		if(self.prediction_cache_exists):
 			self.read_cache_predictions()
-			self.cv_score+=hamming_loss(targets,self.cv_predictions)
+			self.cv_score+=hamming_loss(targets,np.round(self.cv_predictions).astype(int))
 			print "cv_hamming_loss: "+str(self.cv_score)
 		else:
 			for i in range(0,self.nclasses):
 				if(self.predictor[i] is None):
-					self.predictor[i]=SVC(C=self.slack[i],gamma=self.gamma[i])
+					self.predictor[i]=SVC(C=self.slack[i],gamma=self.gamma[i],probability=True)
 			np.random.seed(1231)
 			self.cv_predictions=np.copy(targets)*0
 			self.cv_score=0
@@ -65,14 +65,12 @@ class model:
 			for train, test in kf.split(self.train_features):
 				for i in range(0,self.nclasses):
 					self.predictor[i].fit(self.train_features[train],targets[train,i])
-					self.cv_predictions[test,i]=self.predictor[i].predict(self.train_features[test])
-				self.cv_score+=hamming_loss(targets[test],self.cv_predictions[test])
-			self.cv_score/=nsplits
-			print "cv_hamming_loss: "+str(self.cv_score)
+					self.cv_predictions[test,i]=self.predictor[i].predict_proba(self.train_features[test])[:,1]
+			print "cv_hamming_loss: "+str(hamming_loss(targets,np.round(self.cv_predictions).astype(int)))
 			for i in range(0,self.nclasses):
 				self.predictor[i].fit(self.train_features, targets[:,i])
 				
-		self.predict()
+		self.predict(targets)
 		
 	def get_features(self,path):
 		self.check_feature_cache()
@@ -84,13 +82,19 @@ class model:
 			self.read_features(path)
 			self.cache_features()
 		
-	def predict(self):
+	def predict(self,targets):
 		if(self.prediction_cache_exists):
 			self.read_cache_predictions()
 		else:
 			self.predictions=np.zeros((self.ntest,self.nclasses))
 			for i in range(0,self.nclasses):
-				self.predictions[:,i]=self.predictor[i].predict(self.test_features)
+				self.predictions[:,i]=self.predictor[i].predict_proba(self.test_features)[:,1]
+				if(True):
+					#print self.predictor[i].predict(self.train_features)-targets[:,i]
+					#print np.sum(np.abs(self.predictor[i].predict(self.train_features)-targets[:,i]))
+					#print self.cv_predictions[:,i]-targets[:,i]
+					print np.sum(np.abs(self.cv_predictions[:,i]-targets[:,i]))
+					#print self.predictions[:,i]
 				self.cache_predictions()
 			
 	def cache_features(self):
