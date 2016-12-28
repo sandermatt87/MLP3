@@ -61,4 +61,4 @@ def get_histogram(filename,ref_name,ncubes,smoothening):
 	hist=np.zeros(bins*(ncubes**3))
 	for i in range (0,(ncubes**3)):
 		hist[i*bins:(i+1)*bins]=np.histogram(true_array[i*features_per_cube:(i+1)*features_per_cube],bins=bins,range=(0,1000))[0]
-	return hist[0]
+	return hist
