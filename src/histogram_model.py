@@ -41,7 +41,7 @@ class histogram_model(model.model):
 		tmp=[]
 		test_path=path+"set_test/c"+str(self.seg)+"test_"
 		ref_path=path+"set_test/"+"test_"
-		print "reading train images"
+		print "reading test images"
 		for i in range(0,self.ntest):
 			filename=test_path+str(i+1)+".nii"
 			hist=get_histogram(filename,ref_name,self.ncubes,self.smoothening)
