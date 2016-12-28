@@ -8,6 +8,7 @@ from scipy.ndimage.filters import gaussian_filter
 from sklearn.svm import SVC
 
 import preprocess
+import cube_predictor
 
 #this model uses the voxels as input
 class histogram_model(model.model):
@@ -52,8 +53,12 @@ class histogram_model(model.model):
 def get_histogram(filename,ref_name,ncubes,smoothening):
 	array=parse.voxels_from_image(filename,smoothening_width=smoothening)
 	array=preprocess.features1D(array,ncubes)
-	ref_array=parse.voxels_from_image(filename,smoothening_width=smoothening)
+	ref_array=parse.voxels_from_image(ref_name,smoothening_width=smoothening)
 	ref_array=preprocess.features1D(ref_array,ncubes)
 	true_array=np.multiply(array,ref_array)
-	hist=np.histogram(true_array,bins=100,range=(0,1000))
+	features_per_cube=true_array.shape[0]/(ncubes**3)
+	bins=100
+	hist=np.zeros(bins*(ncubes**3))
+	for i in range (0,(ncubes**3)):
+		hist[i*bins:(i+1)*bins]=np.histogram(true_array[i*features_per_cube:(i+1)*features_per_cube],bins=bins,range=(0,1000))[0]
 	return hist[0]
