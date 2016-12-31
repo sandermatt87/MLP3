@@ -23,7 +23,7 @@ class histogram_model(model.model):
 		self.smoothening=smoothening
 		if(ncubes>1):
 			for i in range(0,nclasses):
-				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma[i],slack[i],cv_opt=True)
+				self.predictor[i]=cube_predictor.cube_predictor(ncubes,gamma[i],slack[i],cv_opt=False)
 				
 	def read_features(self,path):
 		tmp=[]
@@ -51,9 +51,9 @@ class histogram_model(model.model):
 			self.test_features[i,:]=tmp[i]
 			
 def get_histogram(filename,ref_name,ncubes,smoothening):
-	array=parse.voxels_from_image(filename,smoothening_width=smoothening)
+	array=parse.voxels_from_image(filename,smoothening=smoothening)
 	array=preprocess.features1D(array,ncubes)
-	ref_array=parse.voxels_from_image(ref_name,smoothening_width=smoothening)
+	ref_array=parse.voxels_from_image(ref_name,smoothening=smoothening)
 	ref_array=preprocess.features1D(ref_array,ncubes)
 	true_array=np.multiply(array,ref_array)
 	features_per_cube=true_array.shape[0]/(ncubes**3)
