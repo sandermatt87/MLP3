@@ -64,6 +64,19 @@ def features1D(array,ncubes):
 		result[i*cubes[0].size:(i+1)*cubes[0].size]=np.reshape(cubes[i],cubes[i].size)
 	return result
 	
+def fft_features1D(array,ncubes):
+	#creates a 1d array of the features, with the cubes listed consecutively on the array
+	cubes=[]
+	for x in range(0,ncubes):
+		for y in range(0,ncubes):
+			for z in range(0,ncubes):
+				cubes.append(get_cube(array,ncubes,[x,y,z]))
+	result=np.zeros(2*cubes[0].size*ncubes**3)
+	for i in range(0,len(cubes)):
+		result[2*i*cubes[0].size:(2*i+1)*cubes[0].size]=np.real(np.fft.fft(np.reshape(cubes[i],cubes[i].size)))
+		result[(2*i+1)*cubes[0].size:(2*i+2)*cubes[0].size]=np.imag(np.fft.fft(np.reshape(cubes[i],cubes[i].size)))
+	return result
+	
 def segwise_pca(train_features,test_features,ncubes,ntrain,ntest):
 	#pca transforms the features cube by cube
 	nfeatures=train_features.shape[1]
