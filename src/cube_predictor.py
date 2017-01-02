@@ -39,6 +39,32 @@ class cube_predictor():
 			#print self.weights
 		for i in range(0,self.ncubes):
 			self.predictors[i].fit(features[:,i*cube_size:(i+1)*cube_size],targets)
+	def fit_regularized(self,features,targets,test_features):
+		cube_size=int(round(float(features.shape[1])/(self.ncubes)))
+		for i in range(0,self.ncubes):
+			self.predictors.append(SVC(C=self.slack,gamma=self.gamma,probability=True))
+		if(self.cv_opt):
+			#calculate how unorm the predictions are and punish the ones that predict all zeros or all ones
+			c=np.zeros(self.ncubes)
+			for i in range(0,self.ncubes):
+				self.predictors[i].fit(features[:,i*cube_size:(i+1)*cube_size],targets)
+				predictions=self.predictors[i].predict_proba(test_features[:,i*cube_size:(i+1)*cube_size])
+				expectation=np.mean(targets)
+				c[i]=np.mean(np.abs(predictions-expectation))
+		if(not self.cv_opt):
+			self.weights=np.zeros(self.ncubes)+1.0/self.ncubes
+		else:
+			self.cv_predictions=np.zeros((targets.shape[0],self.ncubes))
+			kf = KFold(n_splits=self.nsplits)
+			for cube in range(0,self.ncubes):
+				cube_features=features[:,i*cube_size:(i+1)*cube_size]
+				for train, test in kf.split(cube_features):
+					self.predictors[cube].fit(cube_features[train],targets[train])
+					self.cv_predictions[test,cube]=self.predictors[cube].predict_proba(cube_features[test])[:,1]
+			self.weights=mixing.regularized_cv_optimization(self.cv_predictions,targets,self.ncubes,c)
+			#print self.weights
+		for i in range(0,self.ncubes):
+			self.predictors[i].fit(features[:,i*cube_size:(i+1)*cube_size],targets)
 	def predict(self,features):
 		predictions=self.predict_proba(features)[:,1]
 		final_result=np.round(predictions)
